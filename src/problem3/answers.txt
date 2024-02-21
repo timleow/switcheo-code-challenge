@@ -1,0 +1,16 @@
+Computational Inefficiencies and anti-patterns:
+Inefficient Data Fetching: The useEffect hook is used to fetch data from the Datasource class when the component mounts. However, it lacks a mechanism to handle re-fetching data when necessary, such as when the prices need to be updated. This can lead to stale data being displayed, and unnecessary network requests if the component re-renders but the data hasn't changed.
+
+Lack of Error Handling: The error handling in the useEffect hook is insufficient. When an error occurs during data fetching, it logs the error to the console using console.err, which is incorrect (it should be console.error). Moreover, there is no user feedback or error handling mechanism to inform the user about the error.
+
+Inefficient Sorting Algorithm: The sortedBalances array is sorted based on blockchain priority using a custom sorting function. However, this sorting function is inefficient as it iterates over the balances multiple times. Additionally, it unnecessarily sorts balances with amounts less than or equal to 0, which may not be needed.
+
+Redundant Computation: The formattedBalances array is created by mapping over sortedBalances to format the balance amounts. This creates redundant computation since sortedBalances is already sorted and formatted balances could be derived directly from it.
+
+Improvements:
+Improved Data Fetching: Refactored to use fetch API directly within the component, allowing for better control over data fetching and error handling. Added a dependency on prices in the second useEffect hook to trigger re-fetching balances when prices change.
+
+Enhanced Error Handling: Implemented proper error handling for both data fetching and balance rendering. Errors are caught and logged to the console with meaningful error messages, providing better feedback to developers and users.
+
+Efficient Sorting and Rendering: Optimized sorting and rendering logic to minimize redundant computations. Removed unnecessary filtering and sorting iterations, and directly formatted balances and calculated USD values while mapping over balances. This reduces the computational complexity and improves performance.
+
