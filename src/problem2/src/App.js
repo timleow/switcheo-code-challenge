@@ -16,7 +16,8 @@ function App() {
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false); // State for managing the confirmation modal
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("Alert");
 
   let fromAmount, toAmount;
   if (amountInFromCurrency) {
@@ -72,16 +73,31 @@ function App() {
 
   function handleSwapCurrency() {
     if (toCurrency === fromCurrency) {
+      setAlertMessage("The currencies are the same!")
       setShowAlert(true);
       return;
     }
-    setShowConfirmationModal(true); // Open the confirmation modal
+    setToCurrency(fromCurrency)
+    setFromCurrency(toCurrency)
+  }
+
+  function handleConfirmClicked() {
+    if (toCurrency === fromCurrency) {
+      setAlertMessage("The currencies are the same!")
+      setShowAlert(true);
+      return;
+    }
+    setShowConfirmationModal(true)
   }
 
   function handleConfirmSwap() {
     setShowConfirmationModal(false); // Close the confirmation modal
-    setFromCurrency(toCurrency);
-    setToCurrency(fromCurrency);
+    console.log(fromAmount)
+    let fromAmount2DP = parseFloat(fromAmount).toFixed(2)
+    let toAmount2DP = parseFloat(toAmount).toFixed(2)
+    setAlertMessage(`Swapped ${fromAmount2DP}${fromCurrency.currency} for ${toAmount2DP}${toCurrency.currency} successfully`)
+    setShowAlert(true)
+    
   }
 
   return (
@@ -111,7 +127,7 @@ function App() {
         />
         {showAlert && (
           <CustomAlert
-            message="The currencies are the same."
+            message={alertMessage}
             onClose={() => setShowAlert(false)}
           />
         )}
@@ -123,7 +139,7 @@ function App() {
           />
         )}
       </div>
-      <button className="swapButton" onClick={() => setShowConfirmationModal(true)}>
+      <button className="swapButton" onClick={handleConfirmClicked}>
           Confirm Swap
         </button>
     </div>
